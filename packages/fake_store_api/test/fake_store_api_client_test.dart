@@ -56,5 +56,16 @@ void main() {
         throwsA(isA<ProductRequestFailure>()),
       );
     });
+
+    test('throws ProductsNotFoundFailure on empty response', () async {
+      final response = MockResponse();
+      when(() => response.statusCode).thenReturn(200);
+      when(() => response.body).thenReturn('[]');
+      when(() => httpClient.get(any())).thenAnswer((_) async => response);
+      expect(
+        () async => apiClient.getProducts(),
+        throwsA(isA<ProductsNotFoundFailure>()),
+      );
+    });
   });
 }
