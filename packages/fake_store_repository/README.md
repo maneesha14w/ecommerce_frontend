@@ -4,4 +4,3 @@
 - It is a wrapper around our data provider (fake_store_api)
 - It can interact with multiple data providers and perform transformations on the data before
   handing the result to the business logic layer.
-- Since we don't need any transformations I left this as an empty package.
