@@ -20,14 +20,17 @@ class Product extends Equatable {
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
 
-  factory Product.fromRepository(store_repository.Product product) {
-    return Product(
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      image: product.image,
-    );
+  static List<Product> fromRepository(
+      List<store_repository.Product> repoProductList) {
+    return repoProductList.map((product) {
+      return Product(
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        image: product.image,
+      );
+    }).toList();
   }
 
   final int id;
@@ -35,6 +38,8 @@ class Product extends Equatable {
   final double price;
   final String description;
   final String image;
+
+  static const empty = <Product>[];
 
   @override
   List<Object> get props => [id, title, price, description, image];
