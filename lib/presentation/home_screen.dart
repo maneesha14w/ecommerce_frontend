@@ -1,4 +1,6 @@
 import 'package:ecommerce_frontend/common/constants.dart';
+import 'package:ecommerce_frontend/presentation/product_details.dart';
+import 'package:ecommerce_frontend/presentation/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,63 +72,68 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image.network(
-              product.image,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.contain,
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsScreen(product: product),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-            child: Text(
-              product.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 2,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(15)),
+                child: ProductImage(img: product.image)),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
               child: Text(
-                '\$${product.price.toStringAsFixed(2)}',
+                product.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.green,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),
-          ),
-          Spacer(),
-          Center(
-            child: TextButton(
-                style: ButtonStyle(
-                    foregroundColor:
-                        WidgetStatePropertyAll<Color>(Colors.white),
-                    backgroundColor:
-                        WidgetStatePropertyAll<Color>(Colors.blue)),
-                onPressed: () {},
-                child: Text(kAddToCart)),
-          ),
-          Spacer(),
-        ],
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  '\$${product.price.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.green,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+            Spacer(),
+            Center(
+              child: TextButton(
+                  style: ButtonStyle(
+                      foregroundColor:
+                          WidgetStatePropertyAll<Color>(Colors.white),
+                      backgroundColor:
+                          WidgetStatePropertyAll<Color>(Colors.blue)),
+                  onPressed: () {},
+                  child: Text(kAddToCart)),
+            ),
+            Spacer(),
+          ],
+        ),
       ),
     );
   }
