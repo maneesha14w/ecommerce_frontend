@@ -146,6 +146,11 @@ class ProductCard extends StatelessWidget {
                           WidgetStatePropertyAll<Color>(Colors.blue)),
                   onPressed: () {
                     context.read<CartCubit>().addToCart(product);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${product.title} added to cart!'),
+                      ),
+                    );
                   },
                   child: Text(kAddToCart)),
             ),

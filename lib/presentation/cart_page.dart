@@ -60,7 +60,20 @@ class CartScreen extends StatelessWidget {
                         onPressed: () {
                           // Navigate to Checkout Screen
                         },
-                        child: const Text(kCheckout),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 50,
+                            vertical: 15,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          kCheckout,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
