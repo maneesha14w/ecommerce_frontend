@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:fake_store_repository/fake_store_repository.dart'
     show ProductRepository;
 import 'package:equatable/equatable.dart';

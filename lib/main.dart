@@ -4,9 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fake_store_repository/fake_store_repository.dart';
 
+import 'logic/cart/cubit/cart_cubit.dart';
+
 void main() {
   final productRepository = ProductRepository();
-  runApp(MyApp(productRepository: productRepository));
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (_) => ProductCubit(productRepository),
+      ),
+      BlocProvider(
+        create: (_) => CartCubit(),
+      ),
+    ],
+    child: MyApp(productRepository: productRepository),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,12 +28,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BlocProvider(
-        create: (_) => ProductCubit(productRepository),
-        child: HomeScreen(),
-      ),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: HomeScreen());
   }
 }

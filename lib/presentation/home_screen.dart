@@ -1,6 +1,8 @@
 import 'package:ecommerce_frontend/common/constants.dart';
+import 'package:ecommerce_frontend/logic/cart/cubit/cart_cubit.dart';
+import 'package:ecommerce_frontend/presentation/cart_page.dart';
 import 'package:ecommerce_frontend/presentation/product_details.dart';
-import 'package:ecommerce_frontend/presentation/widgets/cached_image.dart';
+import 'package:ecommerce_frontend/presentation/widgets/product_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,39 +29,53 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text(kTitle),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartScreen(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.shopping_cart))
+        ],
       ),
-      body: BlocBuilder<ProductCubit, ProductState>(
-        builder: (context, state) {
-          if (state.status.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.status.isSuccess) {
-            final products = state.products;
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                itemCount: products.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.5,
+      body: SafeArea(
+        child: BlocBuilder<ProductCubit, ProductState>(
+          builder: (context, state) {
+            if (state.status.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state.status.isSuccess) {
+              final products = state.products;
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  itemCount: products.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.5,
+                  ),
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return ProductCard(product: product);
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return ProductCard(product: product);
-                },
-              ),
-            );
-          } else if (state.status.isFailure) {
-            return Center(
-              child: Text(
-                'Error: ${state.status}',
-                style: const TextStyle(color: Colors.red),
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
+              );
+            } else if (state.status.isFailure) {
+              return Center(
+                child: Text(
+                  'Error: ${state.status}',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
@@ -85,7 +101,7 @@ class ProductCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        elevation: 2,
+        elevation: 1,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -122,13 +138,15 @@ class ProductCard extends StatelessWidget {
             ),
             Spacer(),
             Center(
-              child: TextButton(
+              child: ElevatedButton(
                   style: ButtonStyle(
                       foregroundColor:
                           WidgetStatePropertyAll<Color>(Colors.white),
                       backgroundColor:
                           WidgetStatePropertyAll<Color>(Colors.blue)),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<CartCubit>().addToCart(product);
+                  },
                   child: Text(kAddToCart)),
             ),
             Spacer(),
