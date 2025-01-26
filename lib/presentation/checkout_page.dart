@@ -50,6 +50,7 @@ class _CheckoutViewState extends State<CheckoutView> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text(kOrderSuccess)),
             );
+
             Navigator.pop(context);
           } else if (state.status == CheckoutStatus.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +136,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          context.read<CheckoutCubit>().placeOrder();
+                          context.read<CheckoutCubit>().placeOrder(context);
                         }
                       },
                       child: const Text(kPlaceOrder),

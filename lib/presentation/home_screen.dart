@@ -17,30 +17,75 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Product> _filteredProducts = [];
+
   @override
   void initState() {
     super.initState();
     context.read<ProductCubit>().fetchProducts();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    final allProducts = context.read<ProductCubit>().state.products;
+
+    setState(() {
+      _filteredProducts = allProducts
+          .where((product) => product.title.toLowerCase().contains(query))
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isSearching = _searchController.text.isNotEmpty;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(kTitle),
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartScreen(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.shopping_cart))
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.shopping_cart),
+          ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: BlocBuilder<ProductCubit, ProductState>(
@@ -48,7 +93,12 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state.status.isLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state.status.isSuccess) {
-              final products = state.products;
+              final products = isSearching ? _filteredProducts : state.products;
+
+              if (products.isEmpty) {
+                return const Center(child: Text('No products found'));
+              }
+
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GridView.builder(

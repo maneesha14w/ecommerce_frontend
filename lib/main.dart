@@ -1,3 +1,4 @@
+import 'package:ecommerce_frontend/logic/checkout/cubit/checkout_cubit.dart';
 import 'package:ecommerce_frontend/logic/product/cubit/product_cubit.dart';
 import 'package:ecommerce_frontend/presentation/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,9 @@ void main() {
       ),
       BlocProvider(
         create: (_) => CartCubit(),
+      ),
+      BlocProvider(
+        create: (_) => CheckoutCubit(),
       ),
     ],
     child: MyApp(productRepository: productRepository),
