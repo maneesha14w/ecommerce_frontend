@@ -1,4 +1,5 @@
 import 'package:ecommerce_frontend/common/constants.dart';
+import 'package:ecommerce_frontend/presentation/checkout_page.dart';
 import 'package:ecommerce_frontend/presentation/widgets/product_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +59,16 @@ class CartScreen extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          // Navigate to Checkout Screen
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckoutScreen(
+                                cartItems: state.cartItems,
+                                totalPrice: state.totalPrice,
+                              ),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
